@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
-require('dotenv').config();
+import dotenv from 'dotenv'; 
+dotenv.config();
 
 // Middleware to verify the JWT token for user authentication
-export const authMiddleware = (req, res, next) => {
-  // Extract the JWT token from the authorization header
+ const authMiddleware = (req, res, next) => {
   const token = req.headers['authorization'];
   
   // If no token is provided, return a 403 Forbidden response
@@ -15,12 +15,13 @@ export const authMiddleware = (req, res, next) => {
     
     // Attach the decoded user information to the request object
     req.user = decoded;
-    
     next();
   } catch (error) {
     // If token is invalid or expired, return a 401 Unauthorized response
     res.status(401).send('Invalid token');
   }
 };
+
+export default authMiddleware
 
 
