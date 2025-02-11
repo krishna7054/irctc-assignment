@@ -6,7 +6,8 @@ dotenv.config();
 // Importing route files for handling authentication, train management, and bookings
 import userRoutes from './routes/userRoutes.js'
 import trainRoutes from './routes/trainRoutes.js'
-
+import bookingRoutes from './routes/reserveRoutes.js'
+// const bookingRoutes = require('./routes/bookingRoutes');
 
 (async () => {
   try {
@@ -25,6 +26,7 @@ app.use(express.json());
 
 app.use('/api/auth', userRoutes);     // Routes for authentication (login, registration)
 app.use('/api', trainRoutes);         // Routes for train-related operations (add, update, etc.)
+app.use('/api', bookingRoutes);       // Routes for booking-related operations
 const PORT = process.env.PORT || 3000;
 
 // Starting the server and listening on the specified port
