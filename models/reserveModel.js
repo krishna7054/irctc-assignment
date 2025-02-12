@@ -1,12 +1,35 @@
 import sql from '../config/db.js'
 
 // Book seats for a user
-export const modelbookSeats = async (userId, trainId) => {
-  await sql`UPDATE trains 
-      SET total_seats = total_seats - 1
-      WHERE id = ${trainId}  AND total_seats > 0`
+export const modelbookSeats = async (userId, trainId, numberOfSeats) => {
+  const availableSeats = await sql`
+    SELECT total_seats FROM trains WHERE id = ${trainId}
+  `;
 
-  return await sql`INSERT INTO bookings (user_id, train_id) VALUES (${userId}, ${trainId}) RETURNING *`;
+  if (!availableSeats.length || availableSeats[0].total_seats < numberOfSeats) {
+    throw new Error("Not enough seats available");
+  }
+
+  // Book multiple seats and assign seat numbers uniquely
+  const bookedSeats = [];
+  for (let i = 0; i < numberOfSeats; i++) {
+    const seatResult = await sql`
+      INSERT INTO bookings (user_id, train_id, seat_number)
+      VALUES (${userId}, ${trainId}, (
+        SELECT COALESCE(MAX(seat_number), 0) + 1 FROM bookings WHERE train_id = ${trainId}
+      ))
+      RETURNING *;
+    `;
+    bookedSeats.push(seatResult[0]);
+  }
+    // Update total_seats in the trains table
+    await sql`
+    UPDATE trains 
+    SET total_seats = total_seats - ${numberOfSeats}
+    WHERE id = ${trainId}
+  `;
+
+  return bookedSeats; // Return all booked seat details
 };
 
 // Check availability based on source, destination, and date

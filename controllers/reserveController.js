@@ -17,13 +17,17 @@ export const checkAvailability = async (req, res) => {
 
 // Book seats for a train
 export const bookSeats = async (req, res) => {
-    const { trainId } = req.body;
-    const userId = req.user.id; // Get user ID from the token
+  const { trainId, numberOfSeats } = req.body;
+  const userId = req.user.id; 
+
   try {
-    const booking = await modelbookSeats(userId, trainId);
+    if (numberOfSeats <= 0) {
+      return res.status(400).json({ error: "Number of seats must be greater than zero" });
+    }
+    const booking = await modelbookSeats(userId, trainId, numberOfSeats); // Call the model method
     res.status(201).json(booking);
   } catch (error) {
-    res.status(500).json({ error: 'Error booking seats' });
+    res.status(500).json({ error: "Error booking seats" });
   }
 };
 
