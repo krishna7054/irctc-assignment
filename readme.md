@@ -33,6 +33,7 @@ Admin APIs are protected with an API key to restrict unauthorized access.
 - (Installation)
 - (Database Structure)
 - (API Endpoints)
+- (Deploy Endpoints)
 - (User Endpoints)
 - (Admin Endpoints)
 - (How to Use)
@@ -120,6 +121,15 @@ nodemon app.js
 - GET /api/availability
 - POST /api/book
 - GET /api/booking-details
+
+### Deploy Endpoints
+- POST https://irctc-assignment.onrender.com/api/auth/register
+- POST https://irctc-assignment.onrender.com/api/auth/login
+- POST https://irctc-assignment.onrender.com/api/add 
+- PUT https://irctc-assignment.onrender.com/api/update-seats/:id
+- GET https://irctc-assignment.onrender.com/api/availability
+- POST https://irctc-assignment.onrender.com/api/book
+- GET https://irctc-assignment.onrender.com/api/booking-details
 
 
 #### Admin Endpoints
